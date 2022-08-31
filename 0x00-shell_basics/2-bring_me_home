@@ -1,2 +1,2 @@
 #!/bin/bash
-alias 2-bring_me_home = "cd /home"
+cd ~
