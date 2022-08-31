@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $HOME
+alias 2-bring_me_home = "cd /home"
