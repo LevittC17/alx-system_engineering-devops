@@ -2,4 +2,4 @@
 
 # I prefer updating the progress on a .txt file
 
-# Why? It display's small fonts on github
+# Why? It displays small fonts on github
