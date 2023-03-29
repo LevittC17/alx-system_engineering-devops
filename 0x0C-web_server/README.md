@@ -72,10 +72,10 @@ What is DNS main role
 
 
 ## DNS Record Types
-_ A
-_ CNAME
-_ TXT
-_ MX
+1. A
+2. CNAME
+3. TXT
+4.  MX
 
 ## Requirements
 ##General
