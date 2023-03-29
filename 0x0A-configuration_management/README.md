@@ -25,3 +25,36 @@ Requirements:
 folder name: 0x0A-configuration_management
 file name: 0-create_a_file.pp
 
+
+## 1. Install a package
+
+* Using puppet, install flask from pip3
+* Requirements:
+	*** Instal flask
+	*** Version must be 2.1.0
+
+
+## 2. Execute a command
+
+* Using puppet, create a manifest that kills a process named killmenow
+* Requirements:
+	*** Must be the 'exec' Puppet resource
+	*** Must use 'pkill'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
