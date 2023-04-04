@@ -1,27 +1,30 @@
 #!/bin/bash
 
 # Updating the aptitude package repository
-sudo apt-get update
+apt-get update
 
 # Installing Nginx web-server
-sudo apt-get install -y nginx
+apt-get install -y nginx
 
 # Open port 80 in the firewall to allow incoming HTTP traffic
-sudo ufw allow 'Nginx HTTP'
+ufw allow 'Nginx HTTP'
+mkdir -p /var/www/html
+chmod -R 755 /var/www
 
-# Writing a Nginx server configuration file
-cat > /etc/nginx/sites-available/default <<EOF
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    root /var/www/html;
-    index index.html;
-    server_name _;
-    location / {
-        return 200 "Hello World!";
-    }
-}
-EOF
+echo 'Hello World!' > /var/www/html/index.html
 
+# writing a nginx configuration file
+SERVER_CONFIG=\
+"server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+	server_name _;
+	location / {
+		try_files \$uri \$uri/ =404;
+	}
+}"
+ 
 # Veriing Nginx configuration and restart the service
 sudo nginx -t && sudo service nginx restart
