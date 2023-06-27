@@ -1,6 +1,6 @@
-# Client configuration - connecting to a server without a password
-
-Host *
-     IdentityFile ~/.ssh/school
-     PasswordAuthentication no
-     PreferredAuthentications publickey
+# Client configuration - connect without password
+#
+Host 122750-web-01
+        PasswordAuthentication no
+	IdentityFile ~/.ssh/school
+        PreferredAuthentications publickey
