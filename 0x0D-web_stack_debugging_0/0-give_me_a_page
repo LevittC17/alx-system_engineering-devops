@@ -2,19 +2,8 @@
 # Set Container ID and PORT
 CONTAINER_ID="5c5764d2f60d"
 
-#CONTAINER_PORT="8080"
-
 # Start the container
 docker start $CONTAINER_ID
 
 # Execute a command in the running container to start Apache
 docker exec -d $CONTAINER_ID service apache2 start
-
-# Verify if Apache is running
-#docker exec $CONTAINER_ID service apache2 status
-
-# Display the container's mapped port
-#docker port $CONTAINER_ID
-
-# Access the web page
-#echo "Access the web page at http://localhost:$CONTAINER_PORT"
