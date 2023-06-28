@@ -1,12 +1,32 @@
 #!/usr/bin/env bash
-# Update package lists
+# install engine x server
 
-apt-get update
-
-# Install engine x
+apt-get update -y
 apt-get install -y nginx
-
-# Configure engine x to listen to port 80
-echo 'Hello World!' >> /var/www/html/index.html
-# Restart engine x server
-service nginx start
+if [ $? -eq 0 ]
+then
+    echo -e \
+"http {
+    root /var/www/school;
+    index index.html;
+    server {
+        listen 80;
+        location \ {
+        }
+    }
+}
+events {
+}" > /etc/nginx/nginx.conf
+    mkdir -p /var/www/school
+    echo "Hello World!" > /var/www/school/index.html
+    service nginx start
+    if [ $? -ne 0 ]
+    then
+	"engine x could not start"
+	exit 1
+    fi
+else
+    echo "Failed to install engine x"
+    exit 1
+fi
+exit 0
