@@ -1,29 +1,17 @@
-#!/bin/bash
-# Install Nginx if not already installed
-sudo apt-get update
-sudo apt-get -y install nginx
 
-# Create a new Nginx configuration file for redirection
-sudo tee /etc/nginx/sites-available/redirect <<EOF
-server {
-    listen 80;
-    server_name _;
+#!/usr/bin/env bash
+#Configure Nginx server
+# Update the docker container
+apt-get -y update
 
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
+# Install engine x if not exists
+apt-get -y install nginx
 
-    location / {
-        return 404;
-    }
-}
-EOF
+# Firewall rules to allow engine x
+ufw allow 'Nginx HTTP'
 
-# Create a symbolic link to enable the redirection configuration
-sudo ln -s /etc/nginx/sites-available/redirect /etc/nginx/sites-enabled/
+echo "Hello World" | sudo tee /var/www/html/index
+sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
 
-# Remove the default Nginx configuration
-sudo rm /etc/nginx/sites-enabled/default
-
-# Restart Nginx to apply the changes
-sudo service nginx restart
+# Restart engine x server
+service nginx restart
