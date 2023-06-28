@@ -8,7 +8,6 @@ docker start $CONTAINER_ID
 
 # Execute a command in the running container to start Apache
 docker exec -d $CONTAINER_ID service apache2 start
-sudo service apache2 stop
 
 # Verify if Apache is running
 docker exec $CONTAINER_ID service apache2 status
