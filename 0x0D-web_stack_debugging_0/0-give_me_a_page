@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Connect to docker container
+sudo docker exec -ti b1480423b12e /bin/bash
+
+# start apache server
+sudo service apache2 start
+
+# Edit the content of index.html file
+sudo echo "Hello Holberton" >> /var/www/html/index.html
