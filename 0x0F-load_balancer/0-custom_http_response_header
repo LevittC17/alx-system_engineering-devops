@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Update system and install engine x if not exists
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Configure custom response header
+sudo sed -i '/http {/a \ server_tokens off;\n add_header X-Served-By $hostname;' /etc/nginx/nginx.conf
+
+# Restart engine x
+sudo service nginx restart
