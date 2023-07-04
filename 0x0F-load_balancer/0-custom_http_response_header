@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Update package repositories
-apt-get update
+sudo apt-get update
 
 # Install Nginx
-apt-get install -y nginx
+sudo apt-get install -y nginx
 
 # Create directory structure and default files
-mkdir -p /var/www/html
-cat > /var/www/html/index.html <<EOF
+sudo mkdir -p /var/www/html
+sudo cat > /var/www/html/index.html <<EOF
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +19,7 @@ cat > /var/www/html/index.html <<EOF
 </html>
 EOF
 
-cat > /var/www/html/404.html <<EOF
+sudo cat > /var/www/html/404.html <<EOF
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +33,7 @@ cat > /var/www/html/404.html <<EOF
 EOF
 
 # Configure engine x server
-cat > /etc/nginx/sites-available/default <<EOF
+sudo cat > /etc/nginx/sites-available/default <<EOF
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -53,4 +53,6 @@ server {
 EOF
 
 # Restart Nginx
-service nginx restart
+sudo service nginx restart
+
+sudo ufw allow 'Nginx HTTP'
