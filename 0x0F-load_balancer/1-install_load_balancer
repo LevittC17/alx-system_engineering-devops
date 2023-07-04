@@ -16,8 +16,8 @@ frontend myfrontend
 backend mybackend
     mode http
     balance roundrobin
-    server 122750-web-01 18.207.140.105:80
-    server 122750-web-02 52.87.216.159:80
+    server 122750-web-01 18.207.140.105:80 check
+    server 122750-web-02 52.87.216.159:80 check
 EOF
 
 # Enable and start haproxy
