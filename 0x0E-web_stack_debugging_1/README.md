@@ -11,8 +11,8 @@ For this project, we expect you to look at these concepts:
   <img src="B4eeypV.jpg" alt="Badge meme" />
 </a>
 
-##Requirements
-###General
+## Requirements
+### General
   - Allowed editors: `vi`, `vim`, `emacs`
   - All your files will be interpreted on Ubuntu 20.04 LTS
   - All your files should end with a new line
@@ -24,7 +24,7 @@ For this project, we expect you to look at these concepts:
   - The second line of all your Bash scripts should be a comment explaining what is the script doing
   - You are not allowed to use `wget`
 
-##Tasks
+## Tasks
 0. Nginx likes port 80
 * Using your debugging skills, find out what’s keeping your Ubuntu container’s Nginx installation from listening on port 80. Feel free to install whatever tool you need, start and destroy as many containers as you need to debug the issue. Then, write a Bash script with the minimum number of commands to automate your fix.
 
