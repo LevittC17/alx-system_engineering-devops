@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Set Container ID and PORT
-CONTAINER_ID="e9c482c7095c"
+CONTAINER_ID="f6e131e6a11b"
 CONTAINER_PORT="8080"
 
 # Start the container
@@ -19,4 +19,4 @@ docker port $CONTAINER_ID
 curl -s "http://localhost:$CONTAINER_PORT/"
 
 # Access the web page
-echo "Access the web page at http://localhost:$CONTAINER_PORT"
+#echo "Access the web page at http://localhost:$CONTAINER_PORT"
