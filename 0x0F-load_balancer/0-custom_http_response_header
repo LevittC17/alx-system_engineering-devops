@@ -1,37 +1,58 @@
 #!/usr/bin/env bash
-#
-# Install and configure NGINX on a fresh Ubuntu server
+# Update package repositories
+sudo apt-get update
 
-apt-get -y update
-apt-get -y install nginx
+# Install Nginx
+sudo apt-get install -y nginx
 
-# shellcheck disable=SC2154
-sed -i "/^http {$/a add_header X-Served-By ${HOSTNAME:-$(hostname)};" /etc/nginx/nginx.conf
-
-sed -i '/^\troot \/var\/www\/html;$/a rewrite ^/redirect_me https://www.google.com permanent; error_page 404 /custom_404.html; location = /custom_404.html { root /usr/share/nginx/html; internal; }' /etc/nginx/sites-available/default
-
-cat > /var/www/html/index.html << 'EOF' 
+# Create directory structure and default files
+sudo mkdir -p /var/www/html
+sudo cat > /var/www/html/index.html <<EOF
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Holberton School</title>
-  </head>
-  <body>
-    <p>Holberton School for the win!</p>
-  </body>
+<head>
+    <title>Hello World</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+</body>
 </html>
 EOF
 
-cat > /usr/share/nginx/html/custom_404.html << 'EOF' 
+sudo cat > /var/www/html/404.html <<EOF
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Page Not Found</title>
-  </head>
-  <body>
-    <p>Ceci n'est pas une page</p>
-  </body>
+<head>
+    <title>404 Not Found</title>
+</head>
+<body>
+    <h1>404 Not Found</h1>
+    <p>Ceci n'est pas une page.</p>
+</body>
 </html>
 EOF
 
-service nginx restart
+# Configure engine x server
+sudo cat > /etc/nginx/sites-available/default <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By \$hostname;
+    root /var/www/html;
+    index index.html index.htm;
 
-ufw allow 'Nginx HTTP'
+    location /redirect_me {
+        return 301 http://cuberule.com/;
+    }
+
+    error_page 404 /404.html;
+    location /404 {
+        internal;
+    }
+}
+EOF
+
+# Restart Nginx
+sudo service nginx restart
+
+sudo ufw allow 'Nginx HTTP'
