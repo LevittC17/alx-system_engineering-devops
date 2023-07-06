@@ -7,7 +7,7 @@ apt-get install --no-install-recommends software-properties-common
 add-apt-repository ppa:vbernat/haproxy-2.8
 apt-get install haproxy=2.8.\*
 
-cat >> /etc/haproxy/haproxy.cfg << EOF
+sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<EOFy
 frontend myfrontend
     bind *:80
     mode http
