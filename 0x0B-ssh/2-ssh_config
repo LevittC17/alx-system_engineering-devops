@@ -2,5 +2,6 @@
 #
 Host 122750-web-01
         PasswordAuthentication no
+        StrictHostKeyChecking no
 	IdentityFile ~/.ssh/school
         PreferredAuthentications publickey
