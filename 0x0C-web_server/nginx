@@ -1,0 +1,15 @@
+#!/bin/bash
+# Update package repositories
+apt-get update
+
+# Install engine x
+apt-get install -y nginx
+
+# Configure Nginx to listen on port 80
+sed -i 's/.*listen\s*80.*/    listen 80;/g' /etc/nginx/sites-available/default
+
+# Restart Nginx
+service nginx restart
+
+# Create HTML file with "Hello World!" content
+echo "Hello World!" > /var/www/html/index.html

@@ -3,30 +3,14 @@
 
 apt-get update -y
 apt-get install -y nginx
-if [ $? -eq 0 ]
-then
-    echo -e \
-"http {
-    root /var/www/school;
-    index index.html;
-    server {
-        listen 80;
-        location \ {
-        }
-    }
-}
-events {
-}" > /etc/nginx/nginx.conf
-    mkdir -p /var/www/school
-    echo "Hello World!" > /var/www/school/index.html
-    service nginx start
-    if [ $? -ne 0 ]
-    then
-	"engine x could not start"
-	exit 1
-    fi
-else
-    echo "Failed to install engine x"
-    exit 1
-fi
-exit 0
+ufw allow 'Nginx HTTP'
+
+# Echo 
+echo '<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <p>Hello World!</p>
+  </body>
+</html>' > /var/www/html/index.html
