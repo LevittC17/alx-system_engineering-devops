@@ -1,7 +1,6 @@
-
 #!/usr/bin/env bash
-#Configure Nginx server
-# Update the docker container
+# Configure Nginx server on ubnuntu web-01 and local one
+# Update package repositories
 apt-get -y update
 
 # Install engine x if not exists
@@ -11,7 +10,7 @@ apt-get -y install nginx
 ufw allow 'Nginx HTTP'
 
 echo "Hello World" | sudo tee /var/www/html/index
-sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://fmovies.to/tv/superman-lois-178zv/1-1 permanent;' /etc/nginx/sites-available/default
 
 # Restart engine x server
 service nginx restart
