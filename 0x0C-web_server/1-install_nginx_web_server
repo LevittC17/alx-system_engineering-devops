@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
-# install engine x server
+# update package repositories
+apt-get -y update
 
-apt-get update -y
-apt-get install -y nginx
+# install nginx if not already installed
+apt-get -y install nginx
+
+# ensure uncomplicatd firewall allows traffic on port 80
 ufw allow 'Nginx HTTP'
 
-# Echo 
-echo '<html>
-  <head>
-    <title></title>
-  </head>
-  <body>
-    <p>Hello World!</p>
-  </body>
-</html>' > /var/www/html/index.html
+# echo content to index.html
+echo 'Hello World!' > /var/www/html/index.html
+
+# restart engine x
+service nginx start
