@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+server{
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    server_name _;
+    location / {
+        rewrite ^/testone(.*)https://www.google.com permanent;
+        rewrite ^/testtwo(.*)http://www.google.com;
+            try_files $uri $url/ =404;
+    }
+}

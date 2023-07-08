@@ -6,18 +6,23 @@ apt-get update
 # Install Nginx if it doesn't exist
 apt-get install -y nginx
 
-echo "Hello World!" > /var/www/html/index.html
+# echo "Hello World!" > /var/www/html/index.html
 
 # Configure Nginx for redirection
 echo "server {
-    listen 80;
-    location /redirect_me {
-        return 301 https://fmovies.to/tv/superman-lois-178zv/1-1;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    server_name _;
+    location / {
+ redirect ^/testone(.*) https://www.google.com permanent;
+ redirect ^/testtwo(.*) http://www.google.com;
+         try_files $uri $uri/ =404;
     }
 }" > /etc/nginx/sites-available/default
 
 # Enable the redirection site
-ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/redirect /etc/nginx/sites-enabled/
 
 # Remove the default site symlink
 rm /etc/nginx/sites-enabled/default
