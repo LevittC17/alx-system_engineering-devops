@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
-# Configure Nginx server on ubnuntu web-01 and local one
-# Update package repositories
-apt-get -y update
+# Configure your Nginx server so that /redirect_me is redirecting to another page.
+# The redirection is configured as a "301 Moved Permanently"
 
-# Install engine x if not exists
-apt-get -y install nginx
+apt-get update
+apt-get install -y nginx
 
-# Firewall rules to allow engine x
-ufw allow 'Nginx HTTP'
+echo "Hello World!" > /var/www/html/index.html
 
-echo "Hello World" | sudo tee /var/www/html/index
-sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://fmovies.to/tv/superman-lois-178zv/1-1 permanent;' /etc/nginx/sites-available/default
+nginx_conf="/etc/nginx/sites-available/default"
+new_url="https://fmovies.to/tv/the-blacklist-j2yy2/10-20"
 
-# Restart engine x server
+# Define the location block and the new redirect URL
+location_block="location \/redirect_me \{"
+new_redirect_url="return 301 new_url;"
+new_redirect_url="${new_redirect_url//\/\\\/}"
+
+sed -i "s|$location_block.*|$location_block\n    $new_redirect_url|g" $nginx_conf
+
 service nginx restart
+
+# Display a success message
+echo "Nginx redirect successfully updated to $new_redirect_url"
