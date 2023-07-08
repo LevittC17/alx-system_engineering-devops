@@ -1,58 +1,34 @@
 #!/usr/bin/env bash
+
 # Update package repositories
-sudo apt-get update
+apt-get update
 
-# Install Nginx
-sudo apt-get install -y nginx
+# Install nginx if not already installed
+apt-get -y install nginx
 
-# Create directory structure and default files
-sudo mkdir -p /var/www/html
-sudo cat > /var/www/html/index.html <<EOF
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello World</title>
-</head>
-<body>
-    <h1>Hello World</h1>
-</body>
-</html>
-EOF
-
-sudo cat > /var/www/html/404.html <<EOF
-<!DOCTYPE html>
-<html>
-<head>
-    <title>404 Not Found</title>
-</head>
-<body>
-    <h1>404 Not Found</h1>
-    <p>Ceci n'est pas une page.</p>
-</body>
-</html>
-EOF
-
-# Configure engine x server
-sudo cat > /etc/nginx/sites-available/default <<EOF
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    add_header X-Served-By \$hostname;
-    root /var/www/html;
-    index index.html index.htm;
-
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
-
-    error_page 404 /404.html;
-    location /404 {
-        internal;
-    }
-}
-EOF
-
-# Restart Nginx
-sudo service nginx restart
-
+# Configure firewall to allow requests through port 80
 sudo ufw allow 'Nginx HTTP'
+
+# Create directory for web content
+mkdir -p /var/www/html && chmod -R 777 /var/www
+
+# Change permissions to allow easy file creation in the directory
+# chmod -R 755 /var/www
+
+# Create the index page
+echo 'Hello World!' | sudo tee /var/www/html/index.html
+
+# Create a webpage for error 404
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+
+# Configure custom header and redirect for a single page (/redirect_me)
+sudo sed -i 's/# server_tokens off;/server_tokens off;\n\tadd_header X-Served-By $hostname;\n\trewrite ^\/redirect_me https://fmovies.to/tv/superman-lois-178zv/1-7 permanent;/g' /etc/nginx/sites-available/default
+
+# Configure redirect for 404 error page
+sudo sed -i 's/# error_page 404/    error_page 404/g' /etc/nginx/sites-available/default
+sudo sed -i 's/#     location = \/404.html {/    location = \/404.html {/g' /etc/nginx/sites-available/default
+sudo sed -i 's/#         root \/usr\/share\/nginx\/html;/        root \/var\/www\/html;/g' /etc/nginx/sites-available/default
+sudo sed -i 's/#         internal;/        internal;/g' /etc/nginx/sites-available/default
+
+# Restart the web server after updating the settings
+service nginx restart
