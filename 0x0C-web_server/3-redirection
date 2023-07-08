@@ -1,23 +1,28 @@
-#!/usr/bin/env bash
-# Configure your Nginx server so that /redirect_me is redirecting to another page.
-# The redirection is configured as a "301 Moved Permanently"
-
+#!/bin/bash
+# Redirect to another page: 301 Moved Permanently
+# Update package repositories
 apt-get update
+
+# Install Nginx if it doesn't exist
 apt-get install -y nginx
 
 echo "Hello World!" > /var/www/html/index.html
 
-nginx_conf="/etc/nginx/sites-available/default"
-new_url="https://fmovies.to/tv/the-blacklist-j2yy2/10-20"
+# Configure Nginx for redirection
+# echo "server {
+#    listen 80;
+#    location /redirect_me {
+#        return 301 https://fmovies.to/tv/superman-lois-178zv/1-1 permanent;
+#    }
+# }" > /etc/nginx/sites-available/default
 
-# Define the location block and the new redirect URL
-location_block="location \/redirect_me \{"
-new_redirect_url="return 301 new_url;"
-new_redirect_url="${new_redirect_url//\/\\\/}"
+sed -i '23i\\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n' /etc/nginx/sites-available/default
 
-sed -i "s|$location_block.*|$location_block\n    $new_redirect_url|g" $nginx_conf
+# Enable the redirection site
+ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
 
+# Remove the default site symlink
+rm /etc/nginx/sites-enabled/default
+
+# Restart Nginx
 service nginx restart
-
-# Display a success message
-echo "Nginx redirect successfully updated to $new_redirect_url"
