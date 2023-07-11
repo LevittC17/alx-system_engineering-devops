@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Git add, commit message and push to Hub
+git add .
+git commit -m "$1"
+git push
