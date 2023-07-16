@@ -3,3 +3,4 @@
 sudo netstat -tuln | grep -E ':(80|443)'
 service apache2 stop
 service nginx restart
+curl 0:80
