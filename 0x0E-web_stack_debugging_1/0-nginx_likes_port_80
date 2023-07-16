@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Checking if there is any service using port 80
+sudo netstat -tuln | grep -E ':(80|443)'
+service apache2 stop
+service nginx restart
