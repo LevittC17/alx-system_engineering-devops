@@ -1,34 +1,19 @@
 #!/usr/bin/env bash
+# Configure Nginx on a two different servers -> function
+configure_nginx() {
+  local server_ip="$1"
+  local server_name="$2"
 
-# Update package repositories
-apt-get update
+  # SSH into the server and configure Nginx
+  ssh ubuntu@"$server_ip" <<EOF
+    sudo sed -i 's/^\(\s*server_name\s*\).*\;/\1${server_name}\;/' /etc/nginx/sites-available/default
+    sudo sed -i '/^\s*# pass the PHP/i \\\n\tadd_header X-Served-By \$hostname\;' /etc/nginx/sites-available/default
+    sudo service nginx restart
+EOF
+}
 
-# Install nginx if not already installed
-apt-get -y install nginx
+# Configure web-01
+configure_nginx "34.229.137.7" "122750-web-01"
 
-# Configure firewall to allow requests through port 80
-sudo ufw allow 'Nginx HTTP'
-
-# Create directory for web content
-mkdir -p /var/www/html && chmod -R 777 /var/www
-
-# Change permissions to allow easy file creation in the directory
-# chmod -R 755 /var/www
-
-# Create the index page
-echo 'Hello World!' | sudo tee /var/www/html/index.html
-
-# Create a webpage for error 404
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-
-# Configure custom header and redirect for a single page (/redirect_me)
-sudo sed -i 's/# server_tokens off;/server_tokens off;\n\tadd_header X-Served-By $hostname;\n\trewrite ^\/redirect_me https://fmovies.to/tv/superman-lois-178zv/1-7 permanent;/g' /etc/nginx/sites-available/default
-
-# Configure redirect for 404 error page
-sudo sed -i 's/# error_page 404/    error_page 404/g' /etc/nginx/sites-available/default
-sudo sed -i 's/#     location = \/404.html {/    location = \/404.html {/g' /etc/nginx/sites-available/default
-sudo sed -i 's/#         root \/usr\/share\/nginx\/html;/        root \/var\/www\/html;/g' /etc/nginx/sites-available/default
-sudo sed -i 's/#         internal;/        internal;/g' /etc/nginx/sites-available/default
-
-# Restart the web server after updating the settings
-service nginx restart
+# Configure web-02
+configure_nginx "100.24.206.13" "122750-web-02"
