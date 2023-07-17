@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Disable ufw to ensure clean configuration
+sudo ufw disable
+
+# Reset the `ufw` rules to the default values
+sudo ufw reset
+
+# Set the default incoming policy to deny all incoming traffic
+sudo ufw default deny incoming
+
+# Allow incoming SSH (port 22) connections
+sudo ufw allow 22/tcp
+
+# Allow incoming HTTPS (port 443) connections
+sudo ufw allow 443/tcp
+
+# Allow incoming HTTP (port 80) connections
+sudo ufw allow 80/tcp
+
+# Enable `ufw` to start blocking traffic according to the configured rules
+sudo ufw enable
