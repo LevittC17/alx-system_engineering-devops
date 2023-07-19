@@ -6,3 +6,14 @@ CHANGE MASTER TO
     MASTER_LOG_POS=107;
 
 START SLAVE;
+
+# Configuration for web-02
+
+CHANGE MASTER TO
+    MASTER_HOST='web-02',
+    MASTER_USER='replica_user',
+    MASTER_PASSWORD='phpartisan',
+    MASTER_LOG_FILE='mysql-bin.000009',
+    MASTER_LOG_POS=107;
+
+START SLAVE;
