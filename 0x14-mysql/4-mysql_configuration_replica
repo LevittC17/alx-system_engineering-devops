@@ -1,0 +1,8 @@
+CHANGE MASTER TO
+    MASTER_HOST='web-01',
+    MASTER_USER='replica_user',
+    MASTER_PASSWORD='phpartisan',
+    MASTER_LOG_FILE='mysql-bin.000009',
+    MASTER_LOG_POS=107;
+
+START SLAVE;
