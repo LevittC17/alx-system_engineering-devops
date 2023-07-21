@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Script must run with exactly one argument
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <username>"
+    exit 1
+fi
+
+# Provide a username and store in a variable
+username="$1"
+
+# Run the `whoami` command as the specified user
+# Use sudo
+sudo -u "$username" whoami
