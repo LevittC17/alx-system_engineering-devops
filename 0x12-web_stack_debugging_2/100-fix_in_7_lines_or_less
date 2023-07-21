@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Install Nginx and create 'nginx' user if it doesn't exist
+id -u nginx &>/dev/null || { useradd -r nginx && apt-get install -y nginx; }
+nginx_conf="/etc/nginx/nginx.conf"
+[ -f "$nginx_conf" ]
+{ sed -i 's/^user .*$/user nginx;/' "$nginx_conf"; sed -i 's/^\s*listen .*$/listen 8080;/' "$nginx_conf"; }
