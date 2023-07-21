@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
-# Update package repositories
+# Update package repositories (install unattended-upgrade)
 sudo apt-get update
+sudo apt install unattended-upgrades
 
-# Install nginx if not installed
+# Step 1: Install Nginx (assuming it's not installed yet)
 sudo apt-get install -y nginx
 
-# Create a backup file for the default nginx configuration
-sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+# Step 2: Create 'nginx' user if it doesn't exist
+id -u nginx &>/dev/null || useradd -r nginx
 
-# Modify the Nginx configuration file to run as the 'nginx'
-# user and listen on all IPs on port 8080
-sed -i 's/user\s\+nginx;/user nginx;\nworker_processes auto;/g' /etc/nginx/nginx.conf
+# Step 3: Update Nginx configuration
+# The Nginx configuration file is typically located at /etc/nginx/nginx.conf.
+# We need to change the 'user' directive to 'nginx' and update the 'listen' directive to use port 8080.
+nginx_conf="/etc/nginx/nginx.conf"
 
-echo -e "    listen 8080 default_server;\n    listen [::]:8080 default_server;" >> /etc/nginx/nginx.conf
+if [ -f "$nginx_conf" ]; then
+    # Update the 'user' directive
+    sed -i 's/^user .*$/user nginx;/' "$nginx_conf"
 
-# Remove the default site configuration to avoid conflicts
-rm -f /etc/nginx/sites-available/default
-rm -f /etc/nginx/sites-enabled/default
+# Update the 'listen' directive to use port 8080
+    sed -i 's/^\s*listen .*$/listen 8080;/' "$nginx_conf"
+    exit 1
+fi
 
-# Restart engine x to apply the changes
-sudo service nginx restart
+# Step 4: Restart Nginx to apply the changes
+service nginx restart
