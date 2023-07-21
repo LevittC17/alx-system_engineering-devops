@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# Update package repositories (install unattended-upgrade)
-sudo apt-get update
-sudo apt install unattended-upgrades
-
 # Step 1: Install Nginx (assuming it's not installed yet)
 sudo apt-get install -y nginx
 
@@ -18,8 +14,14 @@ if [ -f "$nginx_conf" ]; then
     # Update the 'user' directive
     sed -i 's/^user .*$/user nginx;/' "$nginx_conf"
 
-# Update the 'listen' directive to use port 8080
+    # Update the 'listen' directive to use port 8080
     sed -i 's/^\s*listen .*$/listen 8080;/' "$nginx_conf"
+
+    # Update the 'user' directive for the worker processes
+    sed -i 's/^worker_processes .*$/worker_processes 4;/' "$nginx_conf"
+
+else
+    echo "Nginx configuration file not found at $nginx_conf"
     exit 1
 fi
 
