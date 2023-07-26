@@ -34,8 +34,8 @@ def get_employee_todo_list(employee_id):
         total_number_of_tasks = len(todo_data)
 
         # Display the results
-        print(
-            f"Employee {employee_name} is done with tasks({number_of_done_tasks}/{total_number_of_tasks}):")
+        print(f"Employee {employee_name} is done with
+              tasks({number_of_done_tasks}/{total_number_of_tasks}): ")
         for task in done_tasks:
             print(f"\t{task['title']}")
 
