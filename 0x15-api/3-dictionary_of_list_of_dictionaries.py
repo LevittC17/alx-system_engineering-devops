@@ -12,14 +12,17 @@ def fetch_users(url):
     users = response.json()
     return users
 
+
 def fetch_tasks_by_user(url, user_id):
     response = requests.get(url + "todos", params={"userId": user_id})
     tasks = response.json()
     return tasks
 
+
 def export_to_json(data, file_name):
     with open(file_name, "w") as json_file:
         json.dump(data, json_file)
+
 
 if __name__ == "__main__":
     base_url = "https://jsonplaceholder.typicode.com/"
@@ -35,7 +38,9 @@ if __name__ == "__main__":
         for task in tasks:
             task_title = task["title"]
             task_completed = task["completed"]
-            user_tasks.append({"task": task_title, "completed": task_completed, "username": user_name})
+            user_tasks.append(
+                {"task": task_title, "completed":
+                 task_completed, "username": user_name})
 
         todo_data[user_id] = user_tasks
 
