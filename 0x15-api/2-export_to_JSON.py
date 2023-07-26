@@ -8,43 +8,37 @@ import requests
 import sys
 
 
-def export_to_json(user_id):
-    """data exported in JSON format"""
-    url = f"https://jsonplaceholder.typicode.com/users/{user_id}"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("Error: Employee not found.")
-        sys.exit(1)
+def fetch_user_info(url, user_id):
+    user_response = requests.get(url + "users/{}".format(user_id))
+    user_data = user_response.json()
+    username = user_data.get("username")
 
-    user = response.json()
-    username = user.get("username")
+    tasks_response = requests.get(url + "todos", params={"userId": user_id})
+    tasks_data = tasks_response.json()
 
-    todos_url = f"https://jsonplaceholder.typicode.com/todos"
-    todos_response = requests.get(todos_url, params={"userId": user_id})
-    if todos_response.status_code != 200:
-        print("Error: Failed to fetch TODO list.")
-        sys.exit(1)
+    return user_id, username, tasks_data
 
-    todos = todos_response.json()
-    user_tasks = []
-    for todo in todos:
-        user_tasks.append({
-            "task": todo.get("title"),
-            "completed": todo.get("completed"),
-            "username": username
-        })
 
-    user_data = {str(user_id): user_tasks}
-
-    json_file = f"{user_id}.json"
-    with open(json_file, "w") as file:
-        json.dump(user_data, file)
+def export_to_json(data, file_name):
+    with open(file_name, "w") as json_file:
+        json.dump(data, json_file)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Usage: python script.py <user_id>")
+    if len(sys.argv) < 2:
+        print("Usage: python3 script_name.py [user_id]")
         sys.exit(1)
 
-    user_id = int(sys.argv[1])
-    export_to_json(user_id)
+    base_url = "https://jsonplaceholder.typicode.com/"
+    user_id = sys.argv[1]
+    user_id, username, tasks_data = fetch_user_info(base_url, user_id)
+
+    user_tasks = []
+    for task in tasks_data:
+        task_title = task.get("title")
+        task_completed = task.get("completed")
+        user_tasks.append({"task": task_title, "completed":
+                           task_completed, "username": username})
+
+    todo_data = {user_id: user_tasks}
+    export_to_json(todo_data, "{}.json".format(user_id))
