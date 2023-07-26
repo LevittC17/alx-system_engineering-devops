@@ -40,6 +40,7 @@ def export_to_json(user_id):
     with open(json_file, "w") as file:
         json.dump(user_data, file)
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
         print("Usage: python script.py <user_id>")
