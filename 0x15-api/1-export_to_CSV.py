@@ -10,39 +10,38 @@ import requests
 import sys
 
 
-def export_to_csv(user_id):
-    """ code base = task 1:: export to csv"""
-    url = f"https://jsonplaceholder.typicode.com/users/{user_id}"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("Error: Employee not found.")
-        sys.exit(1)
+def fetch_employee_data(base_url, emp_id):
+    emp_response = requests.get(base_url + "users/{}".format(emp_id))
+    emp_data = emp_response.json()
+    emp_username = emp_data.get("username")
 
-    user = response.json()
-    username = user.get("username")
+    tasks_response = requests.get(
+        base_url + "todos",
+        params={
+            "userId": emp_id})
+    tasks_data = tasks_response.json()
 
-    todos_url = f"https://jsonplaceholder.typicode.com/todos"
-    todos_response = requests.get(todos_url, params={"userId": user_id})
-    if todos_response.status_code != 200:
-        print("Error: Failed to fetch TODO list.")
-        sys.exit(1)
+    return emp_id, emp_username, tasks_data
 
-    todos = todos_response.json()
 
-    csv_file = f"{user_id}.csv"
-    with open(csv_file, "w", newline="") as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        writer.writerow(
-            ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-        for todo in todos:
-            writer.writerow([user_id, username, str(
-                todo.get("completed")), todo.get("title")])
+def export_to_csv(data, file_name):
+    with open(file_name, "w", newline="") as csvfile:
+        csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [csv_writer.writerow(
+            [emp_id, emp_username, task.get("completed"), task.get("title")]
+        ) for emp_id, emp_username, tasks_data in data for task in tasks_data]
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Usage: python script.py <user_id>")
+    if len(sys.argv) < 2:
+        print("Usage: python3 script_name.py [user_id]")
         sys.exit(1)
 
-    user_id = int(sys.argv[1])
-    export_to_csv(user_id)
+    base_url = "https://jsonplaceholder.typicode.com/"
+    employee_id = sys.argv[1]
+    employee_id, employee_username, employee_tasks = fetch_employee_data(
+                                                          base_url,
+                                                          employee_id)
+
+    employee_data = [(employee_id, employee_username, employee_tasks)]
+    export_to_csv(employee_data, "{}.csv".format(employee_id))
