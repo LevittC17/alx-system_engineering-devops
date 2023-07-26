@@ -10,7 +10,7 @@ import requests
 import sys
 
 
-def get_employee_todo_list_progress(employee_id):
+def todo_list_progress(employee_id):
     """Pass API URL, get employee id"""
     base_url = "https://jsonplaceholder.typicode.com"
     user_url = f"{base_url}/users/{employee_id}"
@@ -47,4 +47,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     employee_id = int(sys.argv[1])
-    get_employee_todo_list_progress(employee_id)
+    todo_list_progress(employee_id)
