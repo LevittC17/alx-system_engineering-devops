@@ -11,6 +11,7 @@ import sys
 
 
 def get_employee_todo_list_progress(employee_id):
+    """Pass API URL, get employee id"""
     base_url = "https://jsonplaceholder.typicode.com"
     user_url = f"{base_url}/users/{employee_id}"
     todos_url = f"{base_url}/todos?userId={employee_id}"
