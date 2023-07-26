@@ -10,41 +10,36 @@ import requests
 import sys
 
 
-def todo_list_progress(employee_id):
+def get_employee_data(api_url, employee_id):
     """Pass API URL, get employee id"""
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_url = f"{base_url}/users/{employee_id}"
-    todos_url = f"{base_url}/todos?userId={employee_id}"
+    employee_response = requests.get(api_url + "users/{}".format(employee_id))
+    employee_data = employee_response.json()
+    tasks_response = requests.get(
+        api_url + "todos",
+        params={
+            "userId": employee_id})
+    tasks_data = tasks_response.json()
+    return employee_data, tasks_data
 
-    try:
-        user_response = requests.get(user_url)
-        todos_response = requests.get(todos_url)
-        user_response.raise_for_status()
-        todos_response.raise_for_status()
 
-        user_data = user_response.json()
-        todos_data = todos_response.json()
-
-        empName = user_data["name"]
-        totTasks = len(todos_data)
-        doneTasks = sum(1 for todo in todos_data if todo["completed"])
-
-        print(f"Employee {empName} done with tasks({doneTasks}/{totTasks}):")
-        for todo in todos_data:
-            if todo["completed"]:
-                print(f"\t{todo['title']}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-    except KeyError:
-        print("Error: Employee not found.")
-        sys.exit(1)
+def print_completed_tasks(employee_name, completed_tasks, total_tasks):
+    print("Employee {} is done with tasks({}/{}):".format(
+        employee_name, len(completed_tasks), total_tasks))
+    [print("\t {}".format(task)) for task in completed_tasks]
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Please provide a valid employee ID as a parameter.")
+    if len(sys.argv) < 2:
+        print("Usage: python3 script_name.py [user_id]")
         sys.exit(1)
 
-    employee_id = int(sys.argv[1])
-    todo_list_progress(employee_id)
+    base_api_url = "https://jsonplaceholder.typicode.com/"
+    employee_id = sys.argv[1]
+
+    employee_data, tasks_data = get_employee_data(base_api_url, employee_id)
+
+    completed_tasks = [task.get("title")
+                       for task in tasks_data if task.get("completed")]
+    employee_name = employee_data.get("name")
+
+    print_completed_tasks(employee_name, completed_tasks, len(tasks_data))
