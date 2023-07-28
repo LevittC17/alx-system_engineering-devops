@@ -1,31 +1,31 @@
 #!/bin/bash
-# Redirect to another page: 301 Moved Permanently
-# Update package repositories
-apt-get update
 
-# Install Nginx if it doesn't exist
-apt-get install -y nginx
+# Check if the script is being run as root
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run the script as root"
+  exit
+fi
 
-# echo "Hello World!" > /var/www/html/index.html
+# Step 1: Install Nginx web server
+./1-install_nginx_web_server
 
-# Configure Nginx for redirection
-echo "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    root /var/www/html;
+# Step 2: Create a new Nginx configuration file for redirection
+cat > /etc/nginx/sites-available/redirect_me << EOF
+server {
+    listen 80;
     server_name _;
-    location / {
- redirect ^/testone(.*) https://www.google.com permanent;
- redirect ^/testtwo(.*) http://www.google.com;
-         try_files $uri $uri/ =404;
-    }
-}" > /etc/nginx/sites-available/default
+    rewrite ^ https://intranet.alxswe.com/projects/266\$request_uri permanent;
+}
+EOF
 
-# Enable the redirection site
-ln -s /etc/nginx/sites-available/redirect /etc/nginx/sites-enabled/
+# Step 3: Create a symbolic link to enable the redirection site
+ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
 
-# Remove the default site symlink
+# Step 4: Remove default configuration symlink (optional)
 rm /etc/nginx/sites-enabled/default
 
-# Restart Nginx
+# Step 5: Test Nginx configuration for syntax errors
+nginx -t
+
+# Step 6: Restart Nginx to apply the changes
 service nginx restart
