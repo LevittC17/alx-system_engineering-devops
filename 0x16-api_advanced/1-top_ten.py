@@ -17,7 +17,8 @@ def top_ten(subreddit):
     params = {'limit': 10}
 
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response = requests.get(url, headers=headers,
+                                params=params, timeout=10)
         response.raise_for_status()
 
         data = response.json().get('data', {}).get('children', [])
