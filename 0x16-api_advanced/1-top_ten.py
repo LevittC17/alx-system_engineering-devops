@@ -7,37 +7,32 @@ first 10 hot posts listed for a given subreddit
 
 
 import requests
+import sys
 
 
 def top_ten(subreddit):
-    """Set a custom User-Agent header to avoid Too Many Requests errors"""
-    headers = {'User-Agent': 'My Reddit Bot'}
-
-    # construct the API URL for the subreddit's hot posts
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json'
+    """ Fetches the top ten post titles from a subreddit """
+    headers = {'User-Agent': 'my_custom_user_agent'}
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    params = {'limit': 10}
 
     try:
-        response = requests.get(url, headers=headers)
-        data = response.json()
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response.raise_for_status()
 
-        # check if the response contains a 'data' fiield
-        if 'data' in data:
-            # extract the first 10 posts
-            posts = data['data']['children'][:10]
-
-            for post in posts:
+        data = response.json().get('data', {}).get('children', [])
+        if data:
+            for post in data:
                 print(post['data']['title'])
-            else:
-                print('None')
-
-    except requests.RequestException:
+        else:
+            print("No posts found.")
+    except requests.exceptions.RequestException as e:
         print('None')
 
 
 if __name__ == "__main__":
-    subreddit_name = sys.argv[1] if len(sys.argv) > 1 else None
-
-    if subreddit_name:
-        top_ten(subreddit_name)
+    if len(sys.argv) < 2:
+        print("No argument passed for the subreddit to search.")
     else:
-        print('Please pass an argument for the subreddit to search')
+        subreddit_name = sys.argv[1]
+        top_ten(subreddit_name)
